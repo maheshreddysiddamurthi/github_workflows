@@ -1,0 +1,89 @@
+{
+  "xcode_version": "Xcode_16",
+  "workspace": "MY_PROJECT",
+  "runner": "macos-15",
+  "scheme": [
+    "MY_SCHEME"
+  ],
+  "networkJsonFilePath": "MY_PROJECT/Network",
+  "buildParameters": [
+    {
+      "Environments": [
+        "DEV"
+      ],
+      "Value": {
+        "buildTypeList": [
+          "ENTERPRISE"
+        ],
+        "deploymentEnvironment": "DEV",
+        "bundle_short_ver": "1.0.0",
+        "aws_role_arn": "arn:aws:iam::9999999999:role/mobile-build-uploader-role",
+        "exportTeamId": {
+          "ENTERPRISE": "SSSSSSSS"
+        },
+        "exportMethod": {
+          "ENTERPRISE": "enterprise"
+        },
+        "profileDetail": {
+          "ENTERPRISE": "PROVPROFDEV"
+        },
+        "certNames": {
+          "ENTERPRISE": "ENTERPRISECERTIFICATE"
+        },
+        "certPassword": {
+          "ENTERPRISE": "ENTERPRISECERTIFICATEPASSWORD"
+        },
+        "configBuildType": {
+          "ENTERPRISE": "dev"
+        },
+        "ipaName": {
+          "ENTERPRISE": "MY_PROJECT"
+        },
+        "isReleaseEnabled": {
+          "ENTERPRISE": false
+        },
+        "PropertyFileNameAlongWithPath": "MY_PROJECT/PropertyFiles/us-east-1-DEV.json",
+        "BASE_BUILD_NUMBER": 1242
+      }
+    },
+    {
+      "Environments": [
+        "PROD"
+      ],
+      "Value": {
+        "buildTypeList": [
+          "ENTERPRISE"
+        ],
+        "bundle_short_ver": "1.0.0",
+        "deploymentEnvironment": "PROD",
+        "aws_role_arn": "arn:aws:iam::99999999:role/mobile-build-uploader-role",
+        "exportTeamId": {
+          "ENTERPRISE": "MMMMMMMM"
+        },
+        "exportMethod": {
+          "ENTERPRISE": "enterprise"
+        },
+        "profileDetail": {
+          "ENTERPRISE": "PROVPROFENTRELEASE"
+        },
+        "certNames": {
+          "ENTERPRISE": "ENTERPRISECERTIFICATE"
+        },
+        "certPassword": {
+          "ENTERPRISE": "ENTERPRISECERTIFICATEPASSWORD"
+        },
+        "configBuildType": {
+          "ENTERPRISE": "release"
+        },
+        "ipaName": {
+          "ENTERPRISE": "MY_PROJECT"
+        },
+        "isReleaseEnabled": {
+          "ENTERPRISE": false
+        },
+        "PropertyFileNameAlongWithPath": "MY_PROJECT/PropertyFiles/us-east-1-PROD.json",
+        "BASE_BUILD_NUMBER": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_environment:
+        required: true
+        type: environment
+      is_additional_build:
+        required: false
+        type: boolean
+        default: false
+      release_info:
+        required: false
+        description: "release_info: format <JIRA TICKET> <RELEASE_VERSION_NAME>"
+        type: string
+        default: ""
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.deployment_environment }}
+
+env:
+  EXPORT_PLIST: ExportOptions.plist
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  settingUpBuilds:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      scheme: ${{ steps.set-matrix.outputs.scheme }}
+      networkJsonFilePath: ${{ steps.set-matrix.outputs.networkJsonFilePath }}
+      productName: ${{ steps.set-matrix.outputs.productName }}
+      xCodeVersion: ${{ steps.set-matrix.outputs.xCodeVersion }}
+      productIpa: ${{ steps.set-matrix.outputs.productIpa }}
+      runner: ${{ steps.set-matrix.outputs.runner }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get common properties
+        id: propsFromBuildCheck
+        uses: RadovanPelka/github-action-json@main
+        with:
+          path: "build_check_parameters.json"
+
+      - name: Filtering properties
+        id: gettingBuildTypes
+        run: |
+          echo "$(cat ./build_check_parameters.json | jq '(.buildParameters[] | select(.Environments | contains(["${{inputs.deployment_environment}}"])) | .Value)')" > ios_build_config_values.json
+
+      - name: Get build properties
+        id: propsFromBuildConfig
+        uses: RadovanPelka/github-action-json@main
+        with:
+          path: "ios_build_config_values.json"
+
+      - name: Setting the matrix
+        id: set-matrix
+        run: |
+          productipa=$(cat ./build_check_parameters.json | jq '(. | try(.productIpa)) // (. | .workspace)')
+          echo "matrix=${{ toJSON(steps.propsFromBuildConfig.outputs.buildTypeList) }}" >> $GITHUB_OUTPUT
+          echo "scheme=${{ toJSON(steps.propsFromBuildCheck.outputs.scheme) }}" >> $GITHUB_OUTPUT
+          echo "networkJsonFilePath=${{ toJSON(steps.propsFromBuildCheck.outputs.networkJsonFilePath) }}" >> $GITHUB_OUTPUT
+          echo "productName=${{ toJSON(steps.propsFromBuildCheck.outputs.workspace) }}" >> $GITHUB_OUTPUT
+          echo "productIpa=$productipa" >> $GITHUB_OUTPUT
+          echo "xCodeVersion=${{ toJSON(steps.propsFromBuildCheck.outputs.xcode_version) }}" >> $GITHUB_OUTPUT
+          echo "runner=${{ toJSON(steps.propsFromBuildCheck.outputs.runner) }}" >> $GITHUB_OUTPUT
+
+      - name: Archive build-info json file
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios_build_config_values
+          path: ./ios_build_config_values.json
+
+      - name: tojson
+        run: |
+          echo "${{ toJSON(steps.propsFromBuildConfig.outputs.buildTypeList) }}" >>tojson.json
