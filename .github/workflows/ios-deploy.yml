@@ -51,7 +51,7 @@ jobs:
       - name: Filtering properties
         id: gettingBuildTypes
         run: |
-          echo "$(cat ./build_check_parameters.json | jq '(.buildParameters[] | select(.Environments | contains(["${{inputs.deployment_environment}}"])) | .Value)')" > ios_build_config_values.json
+          echo "$(cat ./build_check_parameters.json | jq '(.buildParameters[] | select(.Environments | contains(["${{inputs.deployment_environment}}"])) | .Value)')" > ios_build_config_values.txt
 
       - name: Get build properties
         id: propsFromBuildConfig
