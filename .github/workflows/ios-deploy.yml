@@ -51,19 +51,19 @@ jobs:
       - name: Filtering properties
         id: gettingBuildTypes
         run: |
-          echo "$(cat ./build_check_parameters.json | jq '(.buildParameters[] | select(.Environments | contains(["${{inputs.deployment_environment}}"])) | .Value)')" > ios_build_config_values.txt
+          echo "$(cat ./build_check_parameters.json | jq '(.buildParameters[] | select(.Environments | contains(["${{inputs.deployment_environment}}"])) | .Value)')" > ios_build_config_values.json
 
       - name: Get build properties
         id: propsFromBuildConfig
         uses: RadovanPelka/github-action-json@main
         with:
-          path: "ios_build_config_values.txt"
+          path: "ios_build_config_values.json"
 
       - name: Setting the matrix
         id: set-matrix
         run: |
           productipa=$(cat ./build_check_parameters.json | jq '(. | try(.productIpa)) // (. | .workspace)')
-          echo "matrix=${{ toJSON(steps.propsFromBuildConfig.outputs.buildTypeList) }}" >> $GITHUB_OUTPUT
+          echo "matrix=(steps.propsFromBuildConfig.outputs.buildTypeList)" >> $GITHUB_OUTPUT
           echo "scheme=${{ toJSON(steps.propsFromBuildCheck.outputs.scheme) }}" >> $GITHUB_OUTPUT
           echo "networkJsonFilePath=${{ toJSON(steps.propsFromBuildCheck.outputs.networkJsonFilePath) }}" >> $GITHUB_OUTPUT
           echo "productName=${{ toJSON(steps.propsFromBuildCheck.outputs.workspace) }}" >> $GITHUB_OUTPUT
@@ -71,11 +71,11 @@ jobs:
           echo "xCodeVersion=${{ toJSON(steps.propsFromBuildCheck.outputs.xcode_version) }}" >> $GITHUB_OUTPUT
           echo "runner=${{ toJSON(steps.propsFromBuildCheck.outputs.runner) }}" >> $GITHUB_OUTPUT
 
-      - name: Archive build-info json file
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios_build_config_values
-          path: ./ios_build_config_values.txt
+      #   - name: Archive build-info json file
+      #     uses: actions/upload-artifact@v4
+      #     with:
+      #       name: ios_build_config_values
+      #       path: ./ios_build_config_values.json
 
       - name: tojson
         run: |
