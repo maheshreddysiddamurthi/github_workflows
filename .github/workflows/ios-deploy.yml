@@ -57,7 +57,7 @@ jobs:
         id: propsFromBuildConfig
         uses: RadovanPelka/github-action-json@main
         with:
-          path: "ios_build_config_values.json"
+          path: "ios_build_config_values.txt"
 
       - name: Setting the matrix
         id: set-matrix
@@ -75,8 +75,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ios_build_config_values
-          path: ./ios_build_config_values.json
+          path: ./ios_build_config_values.txt
 
       - name: tojson
         run: |
           echo "${{ toJSON(steps.propsFromBuildConfig.outputs.buildTypeList) }}" >>tojson.json
+
+      - name: Archive json file
+        uses: actions/upload-artifact@v4
+        with:
+          name: tojson.json
+          path: ./tojson.json
