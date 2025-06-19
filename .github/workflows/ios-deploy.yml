@@ -78,10 +78,41 @@ jobs:
       #       name: ios_build_config_values
       #       path: ./ios_build_config_values.json
 
+    #   - name: tojson
+    #     run: |
+    #       echo "${{ toJSON(steps.propsFromBuildConfig.outputs.buildTypeList) }}" >>tojsonbuildtype.json
+    #       echo "${{ toJSON(steps.propsFromBuildCheck.outputs.scheme) }}" >>tojsonscheme.json
+
+    #   - name: Archive json file
+    #     uses: actions/upload-artifact@v4
+    #     with:
+    #       name: tojson
+    #       path: |
+    #         ./tojsonbuildtype.json
+    #         ./tojsonscheme.json
+
+  PreparingThevariables:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: settingUpBuilds
+
+    # outputs:
+    #   envFileName: ${{matrix.buildType}}-${{matrix.scheme}}
+
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     buildType: ${{ fromJson(needs.settingUpBuilds.outputs.matrix) }}
+    #     scheme: ${{ fromJson(needs.settingUpBuilds.outputs.scheme) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: tojson
         run: |
-          echo "${{ toJSON(steps.propsFromBuildConfig.outputs.buildTypeList) }}" >>tojsonbuildtype.json
-          echo "${{ toJSON(steps.propsFromBuildCheck.outputs.scheme) }}" >>tojsonscheme.json
+          echo "${{ steps.propsFromBuildConfig.outputs.buildTypeList }}" >>tojsonbuildtype.json
+          echo "${{ steps.propsFromBuildCheck.outputs.scheme }}" >>tojsonscheme.json
 
       - name: Archive json file
         uses: actions/upload-artifact@v4
@@ -90,21 +121,3 @@ jobs:
           path: |
             ./tojsonbuildtype.json
             ./tojsonscheme.json
-
-  PreparingThevariables:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: settingUpBuilds
-
-    outputs:
-      envFileName: ${{matrix.buildType}}-${{matrix.scheme}}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        buildType: ${{ fromJson(needs.settingUpBuilds.outputs.matrix) }}
-        scheme: ${{ fromJson(needs.settingUpBuilds.outputs.scheme) }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
