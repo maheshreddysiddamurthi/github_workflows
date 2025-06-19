@@ -64,8 +64,8 @@ jobs:
         id: set-matrix
         run: |
           productipa=$(cat ./build_check_parameters.json | jq '(. | try(.productIpa)) // (. | .workspace)')
-          echo "matrix=${{ steps.propsFromBuildConfig.outputs.buildTypeList }}" >> $GITHUB_OUTPUT
-          echo "scheme=${{ steps.propsFromBuildCheck.outputs.scheme }}" >> $GITHUB_OUTPUT
+          echo "matrix=${{ toJSON(steps.propsFromBuildConfig.outputs.buildTypeList) }}" >> $GITHUB_OUTPUT
+          echo "scheme=${{ toJSON(steps.propsFromBuildCheck.outputs.scheme) }}" >> $GITHUB_OUTPUT
           echo "networkJsonFilePath=${{ toJSON(steps.propsFromBuildCheck.outputs.networkJsonFilePath) }}" >> $GITHUB_OUTPUT
           echo "productName=${{ toJSON(steps.propsFromBuildCheck.outputs.workspace) }}" >> $GITHUB_OUTPUT
           echo "productIpa=$productipa" >> $GITHUB_OUTPUT
