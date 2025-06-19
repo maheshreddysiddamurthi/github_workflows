@@ -63,8 +63,8 @@ jobs:
         id: set-matrix
         run: |
           productipa=$(cat ./build_check_parameters.json | jq '(. | try(.productIpa)) // (. | .workspace)')
-          echo "matrix=(steps.propsFromBuildConfig.outputs.buildTypeList)" >> $GITHUB_OUTPUT
-          echo "scheme=${{ toJSON(steps.propsFromBuildCheck.outputs.scheme) }}" >> $GITHUB_OUTPUT
+          echo "matrix=${{ steps.propsFromBuildConfig.outputs.buildTypeList }}" >> $GITHUB_OUTPUT
+          echo "scheme=${{ steps.propsFromBuildCheck.outputs.scheme }}" >> $GITHUB_OUTPUT
           echo "networkJsonFilePath=${{ toJSON(steps.propsFromBuildCheck.outputs.networkJsonFilePath) }}" >> $GITHUB_OUTPUT
           echo "productName=${{ toJSON(steps.propsFromBuildCheck.outputs.workspace) }}" >> $GITHUB_OUTPUT
           echo "productIpa=$productipa" >> $GITHUB_OUTPUT
@@ -86,3 +86,21 @@ jobs:
         with:
           name: tojson.json
           path: ./tojson.json
+
+  PreparingThevariables:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: settingUpBuilds
+
+    outputs:
+      envFileName: ${{matrix.buildType}}-${{matrix.scheme}}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        buildType: ${{ needs.settingUpBuilds.outputs.matrix }}
+        scheme: ${{ needs.settingUpBuilds.outputs.scheme }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
