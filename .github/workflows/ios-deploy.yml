@@ -86,7 +86,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: tojson.json
-          path: ./tojson.json
+          path: |
+            ./tojsonbuildtype.json
+            ./tojsonscheme.json
 
   PreparingThevariables:
     runs-on: ubuntu-latest
