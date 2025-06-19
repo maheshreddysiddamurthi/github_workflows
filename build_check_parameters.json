@@ -3,7 +3,7 @@
   "workspace": "MY_PROJECT",
   "runner": "macos-15",
   "scheme": [
-    "MY_SCHEME"
+    "MY_PROJECT"
   ],
   "networkJsonFilePath": "MY_PROJECT/Network",
   "buildParameters": [

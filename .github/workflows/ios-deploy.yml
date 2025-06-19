@@ -79,7 +79,8 @@ jobs:
 
       - name: tojson
         run: |
-          echo "${{ toJSON(steps.propsFromBuildConfig.outputs.buildTypeList) }}" >>tojson.json
+          echo "${{ steps.propsFromBuildConfig.outputs.buildTypeList }}" >>tojson.json
+          echo "${{ steps.propsFromBuildCheck.outputs.scheme }}" >>tojson.json
 
       - name: Archive json file
         uses: actions/upload-artifact@v4
