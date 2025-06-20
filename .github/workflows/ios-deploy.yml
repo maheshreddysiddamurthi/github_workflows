@@ -78,18 +78,18 @@ jobs:
       #       name: ios_build_config_values
       #       path: ./ios_build_config_values.json
 
-    #   - name: tojson
-    #     run: |
-    #       echo "${{ toJSON(steps.propsFromBuildConfig.outputs.buildTypeList) }}" >>tojsonbuildtype.json
-    #       echo "${{ toJSON(steps.propsFromBuildCheck.outputs.scheme) }}" >>tojsonscheme.json
+      - name: tojson
+        run: |
+          echo "${{ toJSON(steps.propsFromBuildConfig.outputs.buildTypeList) }}" >>tojsonbuildtype.json
+          echo "${{ toJSON(steps.propsFromBuildCheck.outputs.scheme) }}" >>tojsonscheme.json
 
-    #   - name: Archive json file
-    #     uses: actions/upload-artifact@v4
-    #     with:
-    #       name: tojson
-    #       path: |
-    #         ./tojsonbuildtype.json
-    #         ./tojsonscheme.json
+      - name: Archive json file
+        uses: actions/upload-artifact@v4
+        with:
+          name: tojson
+          path: |
+            ./tojsonbuildtype.json
+            ./tojsonscheme.json
 
   PreparingThevariables:
     runs-on: ubuntu-latest
@@ -109,15 +109,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: tojson
+      - name: fromjson
         run: |
-          echo "${{ needs.settingUpBuilds.outputs.matrix }}" >>tojsonbuildtype.json
-          echo "${{ needs.settingUpBuilds.outputs.scheme }}" >>tojsonscheme.json
+          echo "${{ fromJson(needs.settingUpBuilds.outputs.matrix) }}" >>fromjsonbuildtype.json
+          echo "${{ fromJson(needs.settingUpBuilds.outputs.scheme) }}" >>fromjsonscheme.json
 
       - name: Archive json file
         uses: actions/upload-artifact@v4
         with:
-          name: tojson
+          name: fromjson
           path: |
-            ./tojsonbuildtype.json
-            ./tojsonscheme.json
+            ./fromjsonbuildtype.json
+            ./fromjsonscheme.json
