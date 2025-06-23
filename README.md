@@ -1,2 +1,2 @@
-# github_workflow
+# IOS Certificate installation
 https://docs.github.com/en/actions/use-cases-and-examples/deploying/installing-an-apple-certificate-on-macos-runners-for-xcode-development
